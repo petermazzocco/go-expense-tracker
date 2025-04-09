@@ -1,0 +1,15 @@
+package pages
+
+import "go-expense-tracker/models"
+
+templ ExpenseByIDPage(expense *models.Expense) {
+	<div id="main-content">
+		<h1 class="text-2xl font-bold mb-6">{ expense.Title }</h1>
+		<div class="space-y-6">
+			{ expense.Category }
+		</div>
+		<div id="edit-expense">
+			Edit expense
+		</div>
+	</div>
+}
