@@ -46,7 +46,7 @@ func Dashboard(expenses []models.Expense) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\"><h1 class=\"text-2xl font-bold mb-6\">My Expenses</h1><div class=\"space-y-6\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\"><h1 class=\"text-2xl font-bold mb-6\">My Expenses</h1><form hx-post=\"/api/expenses\" hx-target=\"#expenses\" hx-swap=\"innerHTML\" class=\"space-y-6 flex flex-col\"><input type=\"text\" name=\"title\" placeholder=\"Title\" class=\"border border-gray-300 rounded px-3 py-2 mb-2\"> <input type=\"text\" name=\"category\" placeholder=\"Category\" class=\"border border-gray-300 rounded px-3 py-2 mb-2\"> <input type=\"number\" name=\"amount\" placeholder=\"Amount\" class=\"border border-gray-300 rounded px-3 py-2 mb-2\"> <button type=\"submit\" class=\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\">Add Expense</button></form><div class=\"space-y-6\" id=\"expenses\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -58,7 +58,7 @@ func Dashboard(expenses []models.Expense) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(expense.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 15, Col: 60}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 21, Col: 60}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -71,7 +71,7 @@ func Dashboard(expenses []models.Expense) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(expense.Category)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 16, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 22, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {

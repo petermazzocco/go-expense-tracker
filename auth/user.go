@@ -77,7 +77,7 @@ func SignIn(c *gin.Context) {
 		true,  // not accessible via JavaScript
 	)
 	// Add redirect header for HTMX
-	c.Header("HX-Redirect", "/dashboard")
+	c.Header("HX-Redirect", "/expenses")
 	// Return the user object and a success message
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User logged in successfully",
@@ -115,6 +115,8 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
+	// Add redirect header for HTMX
+	c.Header("HX-Redirect", "/expenses")
 	c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 }
 

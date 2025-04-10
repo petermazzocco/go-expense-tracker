@@ -7,7 +7,6 @@ import (
 	"go-expense-tracker/initializers"
 	"go-expense-tracker/models"
 	"go-expense-tracker/renderer"
-	"go-expense-tracker/templates"
 	"go-expense-tracker/templates/pages"
 	"net/http"
 
@@ -33,7 +32,7 @@ func main() {
 
 	// Home route
 	r.GET("/", func(c *gin.Context) {
-		page := renderer.New(c.Request.Context(), http.StatusOK, templates.Base("Expense Tracker"))
+		page := renderer.New(c.Request.Context(), http.StatusOK, pages.Index("Expense Tracker"))
 		c.Render(http.StatusOK, page)
 	})
 
@@ -57,16 +56,17 @@ func main() {
 	api.Use(auth.Middleware())
 	{
 		api.GET("/expenses", expenses.ViewAllExpenses)
+		api.GET("/expenses/:id", expenses.GetExpenseByID)
 		api.POST("/expenses", expenses.CreateNewExpense)
 		api.PUT("/expenses/:id", expenses.UpdateExpenseByID)
 		api.DELETE("/expenses/:id", expenses.DeleteExpenseByID)
 	}
 
 	// Expense pages
-	web := r.Group("/")
-	web.Use(auth.Middleware())
+	views := r.Group("/")
+	views.Use(auth.Middleware())
 	{
-		web.GET("/expenses", func(c *gin.Context) {
+		views.GET("/expenses", func(c *gin.Context) {
 			var expenses []models.Expense
 			for i := range expenses {
 				expenses = append(expenses, models.Expense{
@@ -78,14 +78,14 @@ func main() {
 			page := renderer.New(c.Request.Context(), http.StatusOK, pages.Dashboard(expenses))
 			c.Render(http.StatusOK, page)
 		})
-		web.GET("/expenses/:id", func(c *gin.Context) {
+		views.GET("/expenses/:id", func(c *gin.Context) {
 			var expense models.Expense
 			expense.Title = "Whole Foods"
 			expense.Category = "Groceries"
 			page := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpenseByIDPage(&expense))
 			c.Render(http.StatusOK, page)
 		})
-		web.GET("/expenses/:id/edit", func(c *gin.Context) {
+		views.GET("/expenses/:id/edit", func(c *gin.Context) {
 			var expense models.Expense
 			expense.Title = "Whole Foods"
 			expense.Category = "Groceries"

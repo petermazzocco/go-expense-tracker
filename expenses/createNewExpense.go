@@ -5,6 +5,7 @@ import (
 	"go-expense-tracker/initializers"
 	"go-expense-tracker/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,10 +13,9 @@ import (
 func CreateNewExpense(c *gin.Context) {
 	// Validate request body
 	var expense models.Expense
-	if err := c.BindJSON(&expense); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	title := c.PostForm("title")
+	category := c.PostForm("category")
+	amount := c.PostForm("amount")
 
 	// Get user ID from JWT token
 	var user models.User
@@ -27,6 +27,15 @@ func CreateNewExpense(c *gin.Context) {
 		return
 	}
 	expense.UserID = uint(userID)
+	expense.Title = title
+	expense.Category = category
+	expenseAmount, err := strconv.Atoi(amount)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid amount"})
+		return
+	}
+	expense.Amount = float64(expenseAmount)
+
 	// Create the expense for the specific user
 	if err := initializers.DB.Create(&expense).Where("userID = ?", userID).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Could not create expense"})
