@@ -25,15 +25,12 @@ func GetUserIDFromCookie(c *gin.Context) int {
 		return 0
 	}
 
-	fmt.Printf("User ID from context: %s\n", userID)
-
 	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Error converting UserID string '%s' to int: %v", userID, err)})
 		return 0
 	}
 
-	fmt.Printf("Converted user ID: %d\n", userIDInt)
 	return userIDInt
 }
 
@@ -74,7 +71,6 @@ func SignIn(c *gin.Context) {
 
 	// Format user ID correctly for JWT
 	userIDString := strconv.FormatUint(uint64(user.ID), 10)
-	fmt.Printf("User ID for token while signing up: %s (from user ID: %d)\n", userIDString, user.ID)
 
 	// Generate a session token (JWT)
 	token, err := GenerateJWT(userIDString, encodedKey)

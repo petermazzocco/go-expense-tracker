@@ -60,7 +60,7 @@ func main() {
 	api := r.Group("/api")
 	api.Use(auth.Middleware())
 	{
-		api.GET("/expenses", expenses.ViewAllExpenses)
+		api.GET("/expenses?page=1&page_size=1", expenses.ViewAllExpenses)
 		api.GET("/expenses/:id", expenses.GetExpenseByID)
 		api.POST("/expenses", expenses.CreateNewExpense)
 		api.PUT("/expenses/:id", expenses.UpdateExpenseByID)

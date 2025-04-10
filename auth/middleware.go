@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -64,7 +63,6 @@ func Middleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		fmt.Print("Middleware UserID\n", userID)
 
 		c.Set("userID", userID)
 		c.Set("encryptionKey", binaryKey)
