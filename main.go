@@ -6,6 +6,7 @@ import (
 	"go-expense-tracker/helpers"
 	"go-expense-tracker/initializers"
 	"go-expense-tracker/renderer"
+	"go-expense-tracker/templates/components"
 	"go-expense-tracker/templates/pages"
 	"net/http"
 	"sort"
@@ -79,7 +80,7 @@ func main() {
 			})
 			if c.GetHeader("HX-Request") == "true" {
 				// For HTMX requests, return ONLY the expenses list
-				component := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpensesList(expenses))
+				component := renderer.New(c.Request.Context(), http.StatusOK, components.ExpensesList(expenses))
 				c.Render(http.StatusOK, component)
 				return
 			}

@@ -1,6 +1,29 @@
 package components
 
-import "go-expense-tracker/models"
+import (
+	"fmt"
+	"go-expense-tracker/models"
+)
 
-templ ExpenseList(expenses []*models.Expense) {
+templ ExpensesList(expenses []models.Expense) {
+	for _, expense := range expenses {
+		<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition duration-200">
+			<div class="p-5">
+				<h3 class="text-xl font-bold text-gray-800 mb-2">{ expense.Title }</h3>
+				<div class="flex justify-between items-center mb-3">
+					<span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">{ expense.Category }</span>
+					<span class="text-lg font-bold text-green-600">{ fmt.Sprintf("$%.2f", expense.Amount) }</span>
+				</div>
+				<div class="flex justify-end mt-4">
+					<a href={ templ.SafeURL("/expenses/" + fmt.Sprint(expense.ID)) } class="text-blue-600 hover:text-blue-800 text-sm">View Expense Details</a>
+				</div>
+			</div>
+		</div>
+	}
+	if len(expenses) == 0 {
+		<div class="col-span-full text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+			<p class="text-gray-500 mb-2">No expenses recorded yet</p>
+			<p class="text-sm text-gray-400">Use the form above to add your first expense</p>
+		</div>
+	}
 }
