@@ -32,6 +32,9 @@ func main() {
 	// Disable warning
 	r.SetTrustedProxies(nil)
 
+	// Load static files
+	r.Static("/static", "./static")
+
 	// Home route
 	r.GET("/", func(c *gin.Context) {
 		page := renderer.New(c.Request.Context(), http.StatusOK, pages.Index("Expense Tracker"))
