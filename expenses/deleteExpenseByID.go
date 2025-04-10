@@ -38,6 +38,8 @@ func DeleteExpenseByID(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete expense"})
 		return
 	}
+
+	c.Header("HX-Redirect", "/expenses")
 	// Return expense details
 	c.JSON(http.StatusOK, gin.H{
 		"expense": expense,

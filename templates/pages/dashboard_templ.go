@@ -47,75 +47,15 @@ func Dashboard(expenses []models.Expense) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\" class=\"max-w-4xl mx-auto px-4 py-8\"><h1 class=\"text-3xl font-bold mb-8 text-gray-800\">My Expenses</h1><!-- Form with improved styling --><div class=\"bg-white shadow-md rounded-lg p-6 mb-8 border border-gray-200\"><h2 class=\"text-xl font-semibold mb-4 text-gray-700\">Add New Expense</h2><form hx-post=\"/api/expenses\" hx-target=\"#expenses\" hx-swap=\"innerHTML\" class=\"space-y-4\"><div class=\"grid grid-cols-1 md:grid-cols-3 gap-4\"><input type=\"text\" name=\"title\" placeholder=\"Title\" class=\"border border-gray-300 rounded-md px-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500\"> <input type=\"text\" name=\"category\" placeholder=\"Category\" class=\"border border-gray-300 rounded-md px-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500\"> <input type=\"number\" name=\"amount\" placeholder=\"Amount\" step=\"0.01\" class=\"border border-gray-300 rounded-md px-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500\"></div><button type=\"submit\" class=\"bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-md transition duration-200 ease-in-out w-full md:w-auto\">Add Expense</button></form></div><!-- Expenses list as cards --><h2 class=\"text-2xl font-semibold mb-4 text-gray-700\">Expense History</h2><div class=\"grid grid-cols-1 gap-6\" id=\"expenses\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\" class=\"max-w-4xl mx-auto px-4 py-8\"><h1 class=\"text-3xl font-bold mb-8 text-gray-800\">My Expenses</h1><div class=\"bg-white shadow-md rounded-lg p-6 mb-8 border border-gray-200\"><h2 class=\"text-xl font-semibold mb-4 text-gray-700\">Add New Expense</h2><form hx-post=\"/api/expenses\" hx-target=\"#form-response\" hx-swap=\"innerHTML\" hx-on::after-request=\"\n\t\t\t\t\t\tif(event.detail.successful) {\n\t\t\t\t\t\t\tthis.reset();\n\t\t\t\t\t\t\thtmx.ajax(&#39;GET&#39;, &#39;/expenses&#39;, {target:&#39;#previous-expenses&#39;, swap:&#39;outerHTML&#39;});\n\t\t\t\t\t\t}\n\t\t\t\t\t\" class=\"space-y-4\"><div class=\"grid grid-cols-1 md:grid-cols-3 gap-4\"><input type=\"text\" name=\"title\" placeholder=\"Title\" class=\"border border-gray-300 rounded-md px-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500\" required> <input type=\"text\" name=\"category\" placeholder=\"Category\" class=\"border border-gray-300 rounded-md px-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500\" required> <input type=\"number\" name=\"amount\" placeholder=\"Amount\" step=\"0.01\" class=\"border border-gray-300 rounded-md px-4 py-2 w-full focus:ring-blue-500 focus:border-blue-500\" required></div><div class=\"flex flex-col gap-4 justify-between items-center\"><button type=\"submit\" class=\"bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-md transition duration-200 ease-in-out w-full\">Add Expense</button><div id=\"form-response\" class=\"text-sm max-w-lg\"></div></div></form></div><h2 class=\"text-2xl font-semibold mb-4 text-gray-700\">Expense History</h2><div class=\"grid grid-cols-1 gap-6\" id=\"previous-expenses\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for _, expense := range expenses {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition duration-200\"><div class=\"p-5\"><h3 class=\"text-xl font-bold text-gray-800 mb-2\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(expense.Title)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 31, Col: 71}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h3><div class=\"flex justify-between items-center mb-3\"><span class=\"bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(expense.Category)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 33, Col: 113}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span> <span class=\"text-lg font-bold text-green-600\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var5 string
-				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("$%.2f", expense.Amount))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 34, Col: 93}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"flex justify-end mt-4\"><a href=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var6 templ.SafeURL = templ.SafeURL("/expenses/" + fmt.Sprint(expense.ID))
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var6)))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"text-blue-600 hover:text-blue-800 text-sm\">View Expense Details</a></div></div></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<!-- Empty state if no expenses -->")
+			templ_7745c5c3_Err = ExpensesList(expenses).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if len(expenses) == 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"col-span-full text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300\"><p class=\"text-gray-500 mb-2\">No expenses recorded yet</p><p class=\"text-sm text-gray-400\">Use the form above to add your first expense</p></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -124,6 +64,91 @@ func Dashboard(expenses []models.Expense) templ.Component {
 		templ_7745c5c3_Err = templates.Base("Dashboard | Expense Tracker").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func ExpensesList(expenses []models.Expense) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		for _, expense := range expenses {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition duration-200\"><div class=\"p-5\"><h3 class=\"text-xl font-bold text-gray-800 mb-2\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(expense.Title)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 50, Col: 68}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h3><div class=\"flex justify-between items-center mb-3\"><span class=\"bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(expense.Category)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 52, Col: 110}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span> <span class=\"text-lg font-bold text-green-600\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("$%.2f", expense.Amount))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/dashboard.templ`, Line: 53, Col: 90}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><div class=\"flex justify-end mt-4\"><a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 templ.SafeURL = templ.SafeURL("/expenses/" + fmt.Sprint(expense.ID))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var7)))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"text-blue-600 hover:text-blue-800 text-sm\">View Expense Details</a></div></div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if len(expenses) == 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"col-span-full text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300\"><p class=\"text-gray-500 mb-2\">No expenses recorded yet</p><p class=\"text-sm text-gray-400\">Use the form above to add your first expense</p></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		return nil
 	})

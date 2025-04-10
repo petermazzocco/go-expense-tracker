@@ -8,6 +8,7 @@ import (
 	"go-expense-tracker/renderer"
 	"go-expense-tracker/templates/pages"
 	"net/http"
+	"sort"
 
 	"github.com/gin-gonic/gin"
 )
@@ -72,6 +73,17 @@ func main() {
 				c.String(http.StatusInternalServerError, "Error fetching expenses")
 				return
 			}
+			// Sort expenses by CreatedAt in descending order (newest first)
+			sort.Slice(expenses, func(i, j int) bool {
+				return expenses[i].CreatedAt.After(expenses[j].CreatedAt)
+			})
+			if c.GetHeader("HX-Request") == "true" {
+				// For HTMX requests, return ONLY the expenses list
+				component := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpensesList(expenses))
+				c.Render(http.StatusOK, component)
+				return
+			}
+
 			page := renderer.New(c.Request.Context(), http.StatusOK, pages.Dashboard(expenses))
 			c.Render(http.StatusOK, page)
 		})
@@ -84,6 +96,17 @@ func main() {
 				return
 			}
 			page := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpenseByIDPage(expense))
+			c.Render(http.StatusOK, page)
+		})
+		views.GET("/expenses/:id/edit", func(c *gin.Context) {
+			userID := auth.GetUserIDFromCookie(c)
+			id := c.Param("id")
+			expense, err := helpers.GetExpenseByIDHelper(id, userID)
+			if err != nil {
+				c.String(http.StatusInternalServerError, "Error fetching expense")
+				return
+			}
+			page := renderer.New(c.Request.Context(), http.StatusOK, pages.EditExpenseByIDPage(expense))
 			c.Render(http.StatusOK, page)
 		})
 	}

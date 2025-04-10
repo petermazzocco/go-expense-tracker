@@ -5,6 +5,7 @@ import (
 	"go-expense-tracker/initializers"
 	"go-expense-tracker/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,14 @@ func UpdateExpenseByID(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID is required"})
+		return
+	}
+
+	title := c.PostForm("title")
+	category := c.PostForm("category")
+	amount := c.PostForm("amount")
+	if title == "" || category == "" || amount == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Title, Category, and Amount are required"})
 		return
 	}
 
@@ -34,15 +43,15 @@ func UpdateExpenseByID(c *gin.Context) {
 	}
 
 	// Now bind the updated data
-	var updatedData models.Expense
-	if err := c.BindJSON(&updatedData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+
+	amountInt, err := strconv.Atoi(amount)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid amount"})
 		return
 	}
-
-	existingExpense.Amount = updatedData.Amount
-	existingExpense.Category = updatedData.Category
-	existingExpense.Title = updatedData.Title
+	existingExpense.Amount = float64(amountInt)
+	existingExpense.Category = category
+	existingExpense.Title = title
 
 	// Save the updated expense
 	result = initializers.DB.Save(&existingExpense)
@@ -50,7 +59,7 @@ func UpdateExpenseByID(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update expense"})
 		return
 	}
-
+	c.Header("HX-Redirect", "/expenses/"+id)
 	// Return expense details
 	c.JSON(http.StatusOK, gin.H{
 		"expense": existingExpense,
