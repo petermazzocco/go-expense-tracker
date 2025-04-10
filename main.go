@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"go-expense-tracker/auth"
 	"go-expense-tracker/expenses"
+	"go-expense-tracker/helpers"
 	"go-expense-tracker/initializers"
-	"go-expense-tracker/models"
 	"go-expense-tracker/renderer"
 	"go-expense-tracker/templates/pages"
 	"net/http"
@@ -67,29 +66,24 @@ func main() {
 	views.Use(auth.Middleware())
 	{
 		views.GET("/expenses", func(c *gin.Context) {
-			var expenses []models.Expense
-			for i := range expenses {
-				expenses = append(expenses, models.Expense{
-					Title:    fmt.Sprintf("Expense %d", i+1),
-					Category: fmt.Sprintf("Category %d", i+1),
-					Amount:   float64(i + 1),
-				})
+			userID := auth.GetUserIDFromCookie(c)
+			expenses, err := helpers.GetAllExpensesHelper(userID, c)
+			if err != nil {
+				c.String(http.StatusInternalServerError, "Error fetching expenses")
+				return
 			}
 			page := renderer.New(c.Request.Context(), http.StatusOK, pages.Dashboard(expenses))
 			c.Render(http.StatusOK, page)
 		})
 		views.GET("/expenses/:id", func(c *gin.Context) {
-			var expense models.Expense
-			expense.Title = "Whole Foods"
-			expense.Category = "Groceries"
-			page := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpenseByIDPage(&expense))
-			c.Render(http.StatusOK, page)
-		})
-		views.GET("/expenses/:id/edit", func(c *gin.Context) {
-			var expense models.Expense
-			expense.Title = "Whole Foods"
-			expense.Category = "Groceries"
-			page := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpenseByIDPage(&expense))
+			userID := auth.GetUserIDFromCookie(c)
+			id := c.Param("id")
+			expense, err := helpers.GetExpenseByIDHelper(id, userID)
+			if err != nil {
+				c.String(http.StatusInternalServerError, "Error fetching expense")
+				return
+			}
+			page := renderer.New(c.Request.Context(), http.StatusOK, pages.ExpenseByIDPage(expense))
 			c.Render(http.StatusOK, page)
 		})
 	}

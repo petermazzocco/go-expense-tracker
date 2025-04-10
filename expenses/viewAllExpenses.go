@@ -20,9 +20,11 @@ func ViewAllExpenses(c *gin.Context) {
 	// Get total count for pagination info
 	initializers.DB.Model(&models.Expense{}).Where("user_id = ?", userID).Count(&totalCount)
 
-	// Get paginated results
-	if err := initializers.DB.Where("user_id = ?", userID).Scopes(helpers.Paginate(c)).Find(&expenses).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not return expenses for user ID"})
+	expenses, err := helpers.GetAllExpensesHelper(userID, c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 

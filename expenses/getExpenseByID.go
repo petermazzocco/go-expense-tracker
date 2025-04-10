@@ -2,8 +2,7 @@ package expenses
 
 import (
 	"go-expense-tracker/auth"
-	"go-expense-tracker/initializers"
-	"go-expense-tracker/models"
+	"go-expense-tracker/helpers"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,13 +20,11 @@ func GetExpenseByID(c *gin.Context) {
 	userID := auth.GetUserIDFromCookie(c)
 
 	// Find the post where the ID matches the param and userID matches the cookie userID
-	var expense models.Expense
-	result := initializers.DB.Where("id = ?", id).Where("user_id = ?", userID).Find(&expense)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+	expense, err := helpers.GetExpenseByIDHelper(id, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get expense"})
 		return
 	}
-
 	// Return expense details
 	c.JSON(http.StatusOK, gin.H{
 		"expense": expense,

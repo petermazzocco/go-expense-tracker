@@ -4,7 +4,7 @@ import "go-expense-tracker/templates"
 
 templ SignUp() {
 	@templates.Base("Sign Up | Expense Tracker") {
-		<div id="signup">
+		<div id="signup" class="bg-white shadow-md rounded-lg p-6 mb-8 border border-gray-200">
 			<h1 class="text-2xl font-bold mb-6">Sign Up</h1>
 			<div class="space-y-6">
 				<form
@@ -14,15 +14,15 @@ templ SignUp() {
 				>
 					<div class="mb-4">
 						<label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
-						<input type="text" id="name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 w-64" required/>
+						<input type="text" id="name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full" required/>
 					</div>
 					<div class="mb-4">
 						<label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
-						<input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 w-64" required/>
+						<input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full" required/>
 					</div>
 					<div class="mb-4">
 						<label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-						<input type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 w-64" required/>
+						<input type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 w-full" required/>
 					</div>
 					<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Sign Up</button>
 				</form>
