@@ -8,17 +8,23 @@ import (
 )
 
 templ ExpenseByIDPage(expense *models.Expense) {
-	@templates.Base("Expense | Expense Tracker") {
+	@templates.Base("Expense | Expense Tracker", true) {
 		<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition duration-200">
-			<div class="p-5">
-				<h3 class="text-xl font-bold text-gray-800 mb-2">{ expense.Title }</h3>
-				<div class="flex justify-between items-center mb-3">
+			<div class="p-5 flex flex-col gap-2">
+				<div class="flex flex-col justify-start items-start md:flex-row md:justify-between md:items-center">
+					<h3 class="text-xl font-bold text-gray-800">{ expense.Title }</h3>
 					<span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">{ expense.Category }</span>
-					<span class="text-lg font-bold text-green-600">{ fmt.Sprintf("$%.2f", expense.Amount) }</span>
 				</div>
-				<div class="flex justify-end mt-4 gap-4">
-					<a href={ templ.SafeURL("/expenses/"+fmt.Sprint(expense.ID)) + "/edit" } class="text-blue-600 hover:text-blue-800 text-sm">Edit Expense</a>
-					<button hx-delete={ "/api/expenses/" + strconv.FormatUint(uint64(expense.ID), 10) } hx-confirm="Are you sure you want to delete this expense?" hx-push-url="true" class="text-red-600 hover:text-red-800 text-sm">Delete Expense</button>
+				<div class="gap-0.5">
+					<p class="text-xs text-gray-600">Created on { expense.CreatedAt.Local().Local().Format("Mon Jan _2 15:04:05 MST 2006") }</p>
+					<p class="text-xs text-gray-600 ">Updated on { expense.UpdatedAt.Local().Local().Format("Mon Jan _2 15:04:05 MST 2006") }</p>
+				</div>
+				<div class="lex justify-end  gap-4 items-end text-right">
+					<span class="text-2xl font-bold text-green-600">{ fmt.Sprintf("$%.2f", expense.Amount) }</span>
+				</div>
+				<div class="flex flex-col md:flex-row justify-center md:justify-end gap-4 mt-4 items-center">
+					<a href={ templ.SafeURL("/expenses/"+fmt.Sprint(expense.ID)) + "/edit" } class="w-full md:w-fit bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-lg text-sm text-center">Edit Expense</a>
+					<button hx-delete={ "/api/expenses/" + strconv.FormatUint(uint64(expense.ID), 10) } hx-confirm="Are you sure you want to delete this expense?" hx-push-url="true" class="w-full text-center md:w-fit bg-red-600 text-white hover:bg-red-800 p-2.5 rounded-lg text-sm">Delete Expense</button>
 				</div>
 			</div>
 		</div>
@@ -26,7 +32,7 @@ templ ExpenseByIDPage(expense *models.Expense) {
 }
 
 templ EditExpenseByIDPage(expense *models.Expense) {
-	@templates.Base("Editing Expense | Expense Tracker") {
+	@templates.Base("Editing Expense | Expense Tracker", true) {
 		<div class="bg-white shadow-md rounded-lg p-6 mb-8 border border-gray-200">
 			<h2 class="text-xl font-semibold mb-4 text-gray-700">Edit Expense</h2>
 			<form hx-put={ "/api/expenses/" + strconv.FormatUint(uint64(expense.ID), 10) } hx-confirm="Are you sure you want to edit this expense?" hx-swap="outerHTML" hx-push-url="true" class="space-y-4">

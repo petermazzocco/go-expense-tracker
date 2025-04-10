@@ -7,7 +7,7 @@ import (
 )
 
 templ Dashboard(expenses []models.Expense) {
-	@templates.Base("Dashboard | Expense Tracker") {
+	@templates.Base("Dashboard | Expense Tracker", true) {
 		<div id="main-content" class="max-w-4xl mx-auto px-4 py-8">
 			<h1 class="text-3xl font-bold mb-8 text-gray-800">My Expenses</h1>
 			<div class="bg-white shadow-md rounded-lg p-6 mb-8 border border-gray-200">
