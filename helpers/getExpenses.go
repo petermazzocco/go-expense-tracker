@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"fmt"
 	"go-expense-tracker/initializers"
 	"go-expense-tracker/models"
 
@@ -13,6 +14,7 @@ func GetAllExpensesHelper(userID int, c *gin.Context) ([]models.Expense, error) 
 	if err := initializers.DB.Where("user_id = ?", userID).Scopes(Paginate(c)).Find(&expenses).Error; err != nil {
 		return nil, err
 	}
+	fmt.Println("Expenses for user ID", expenses, userID)
 	return expenses, nil
 }
 

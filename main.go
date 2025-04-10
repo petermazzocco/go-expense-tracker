@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go-expense-tracker/auth"
 	"go-expense-tracker/expenses"
 	"go-expense-tracker/helpers"
@@ -69,6 +70,7 @@ func main() {
 	{
 		views.GET("/expenses", func(c *gin.Context) {
 			userID := auth.GetUserIDFromCookie(c)
+			fmt.Println(userID)
 			expenses, err := helpers.GetAllExpensesHelper(userID, c)
 			if err != nil {
 				c.String(http.StatusInternalServerError, "Error fetching expenses")

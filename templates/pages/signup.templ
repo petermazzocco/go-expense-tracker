@@ -11,6 +11,7 @@ templ SignUp() {
 					hx-post="/signup"
 					hx-swap="innerHTML"
 					hx-target="#success"
+					hx-indicator="#signup-spinner"
 				>
 					<div class="mb-4">
 						<label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
@@ -28,6 +29,11 @@ templ SignUp() {
 				</form>
 			</div>
 			<div id="success"></div>
+			<div class="flex flex-col justify-center items-center">
+				<div id="signup-spinner" class="htmx-indicator">
+					<div class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"></div>
+				</div>
+			</div>
 		</div>
 	}
 }

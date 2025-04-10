@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -55,8 +56,17 @@ func Middleware() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unknown error occured with the binary key"})
 		}
+
 		// Set user ID in context for use in handlers
-		c.Set("userID", claims["sub"])
+		userID, ok := claims["sub"].(string)
+		if !ok {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID in token"})
+			c.Abort()
+			return
+		}
+		fmt.Print("Middleware UserID\n", userID)
+
+		c.Set("userID", userID)
 		c.Set("encryptionKey", binaryKey)
 		c.Next()
 	}

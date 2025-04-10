@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/base64"
+	"fmt"
 	"go-expense-tracker/initializers"
 	"go-expense-tracker/models"
 	"net/http"
@@ -12,39 +13,50 @@ import (
 )
 
 func GetUserIDFromCookie(c *gin.Context) int {
-	userID, exists := c.MustGet("userID").(string)
+	userIDValue, exists := c.Get("userID")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized - no userID in context"})
 		return 0
 	}
+
+	userID, ok := userIDValue.(string)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized - userID not a string"})
+		return 0
+	}
+
+	fmt.Printf("User ID from context: %s\n", userID)
+
 	userIDInt, err := strconv.Atoi(userID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Error converting UserID string to int"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Error converting UserID string '%s' to int: %v", userID, err)})
 		return 0
 	}
+
+	fmt.Printf("Converted user ID: %d\n", userIDInt)
 	return userIDInt
 }
 
 func SignIn(c *gin.Context) {
 	// Get request data
-	var request struct {
-		Email    string `validate:"required,email"`
-		Password string `validate:"required,password"`
-	}
-	if err := c.ShouldBind(&request); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+
+	// Validate required fields
+	if email == "" || password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email, name, and password are required"})
 		return
 	}
 
 	// Find user in DB
 	var user models.User
-	if err := initializers.DB.Where("email = ?", request.Email).First(&user).Error; err != nil {
+	if err := initializers.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
 
 	// Compare stored hashed password with the given password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
@@ -57,10 +69,15 @@ func SignIn(c *gin.Context) {
 	}
 
 	// Derive the encryption key
-	encryptionKey := DeriveKey(request.Password, salt)
+	encryptionKey := DeriveKey(password, salt)
 	encodedKey := EncodeToBase64(encryptionKey)
+
+	// Format user ID correctly for JWT
+	userIDString := strconv.FormatUint(uint64(user.ID), 10)
+	fmt.Printf("User ID for token while signing up: %s (from user ID: %d)\n", userIDString, user.ID)
+
 	// Generate a session token (JWT)
-	token, err := GenerateJWT(strconv.FormatUint(uint64(user.ID), 10), encodedKey)
+	token, err := GenerateJWT(userIDString, encodedKey)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
 		return
@@ -85,10 +102,20 @@ func SignIn(c *gin.Context) {
 }
 
 func SignUp(c *gin.Context) {
-	var user models.User
-	if err := c.ShouldBind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+	email := c.PostForm("email")
+	name := c.PostForm("name")
+	password := c.PostForm("password")
+
+	// Validate required fields
+	if email == "" || name == "" || password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email, name, and password are required"})
 		return
+	}
+
+	user := models.User{
+		Email:    email,
+		Name:     name,
+		Password: password,
 	}
 
 	// Generate a salt for the user
